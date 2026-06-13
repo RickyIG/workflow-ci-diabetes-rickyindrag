@@ -1,6 +1,12 @@
 name: Workflow CI
 
 on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "MLProject/trained_artifacts/**"
+
   workflow_dispatch:
 
 permissions:
