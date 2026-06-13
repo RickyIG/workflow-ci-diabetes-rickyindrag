@@ -83,7 +83,18 @@ jobs:
           python - <<'PY'
           import os
           from pathlib import Path
+          import dagshub
+          import dagshub.auth
           import mlflow
+
+          token = os.environ["DAGSHUB_USER_TOKEN"]
+          dagshub.auth.add_app_token(token)
+
+          dagshub.init(
+              repo_owner=os.environ["DAGSHUB_OWNER"],
+              repo_name=os.environ["DAGSHUB_REPO"],
+              mlflow=True,
+          )
 
           run_id = os.environ["RUN_ID"]
 
