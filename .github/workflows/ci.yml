@@ -126,7 +126,8 @@ jobs:
         run: |
           mlflow models build-docker \
             -m MLProject/trained_artifacts/model \
-            -n "${IMAGE_NAME}"
+            -n "${IMAGE_NAME}" \
+            --env-manager=local
 
       - name: Log in to Docker Hub
         run: |
