@@ -1,0 +1,20 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY MLProject /app/MLProject
+
+RUN pip install --no-cache-dir \
+    numpy==2.4.6 \
+    pandas==2.3.3 \
+    scikit-learn==1.9.0 \
+    matplotlib==3.11.0 \
+    seaborn==0.13.2 \
+    mlflow==2.19.0 \
+    optuna==4.9.0 \
+    dagshub==0.7.0 \
+    python-dotenv==1.2.2
+
+WORKDIR /app/MLProject
+
+CMD ["python", "modelling.py"]
