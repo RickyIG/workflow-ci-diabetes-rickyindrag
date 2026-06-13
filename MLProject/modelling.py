@@ -11,6 +11,7 @@ import mlflow
 import mlflow.sklearn
 import optuna
 import dagshub
+import dagshub.auth
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.metrics import (
@@ -111,9 +112,17 @@ def plot_roc_curve(model, X_test, y_test, save_path):
 
 
 def main():
-    dagshub.init(repo_owner=DAGSHUB_OWNER, repo_name=DAGSHUB_REPO, mlflow=True)
+    token = os.getenv("DAGSHUB_USER_TOKEN") or os.getenv("DAGSHUB_TOKEN")
+    if token:
+        dagshub.auth.add_app_token(token=token)
 
     os.environ.pop("MLFLOW_RUN_ID", None)
+
+    dagshub.init(
+        repo_owner=DAGSHUB_OWNER,
+        repo_name=DAGSHUB_REPO,
+        mlflow=True,
+    )
 
     train_df, test_df = load_data()
 

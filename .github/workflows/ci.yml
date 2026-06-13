@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DAGSHUB_OWNER: ${{ secrets.DAGSHUB_OWNER }}
-      DAGSHUB_REPO: ${{ secrets.DAGSHUB_REPO }}
-      DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-
-      DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      IMAGE_NAME: diabetes-mlflow-ci
+        DAGSHUB_OWNER: ${{ secrets.DAGSHUB_OWNER }}
+        DAGSHUB_REPO: ${{ secrets.DAGSHUB_REPO }}
+        DAGSHUB_USER_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_OWNER }}
+        MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKER_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        IMAGE_NAME: diabetes-mlflow-ci
 
     steps:
       - name: Checkout repository
@@ -55,7 +55,7 @@ jobs:
             matplotlib==3.11.0 \
             seaborn==0.13.2 \
             scikit-learn==1.9.0 \
-            python-dotenv
+            python-dotenv==1.2.2
 
       - name: Run mlflow project
         working-directory: MLProject
