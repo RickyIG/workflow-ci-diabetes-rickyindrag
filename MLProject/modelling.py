@@ -31,8 +31,8 @@ DATA_DIR = "diabetes_preprocessing"
 N_TRIALS = 5
 CV_FOLDS = 3
 
-DAGSHUB_OWNER = os.getenv("DAGSHUB_OWNER", "YOUR_DAGSHUB_USERNAME")
-DAGSHUB_REPO = os.getenv("DAGSHUB_REPO", "YOUR_REPO_NAME")
+DAGSHUB_OWNER = os.getenv("DAGSHUB_OWNER")
+DAGSHUB_REPO = os.getenv("DAGSHUB_REPO")
 
 if not DAGSHUB_OWNER:
     raise ValueError("DAGSHUB_OWNER belum diset")
@@ -113,6 +113,8 @@ def plot_roc_curve(model, X_test, y_test, save_path):
 def main():
     dagshub.init(repo_owner=DAGSHUB_OWNER, repo_name=DAGSHUB_REPO, mlflow=True)
 
+    os.environ.pop("MLFLOW_RUN_ID", None)
+
     train_df, test_df = load_data()
 
     X_train = train_df.drop("Outcome", axis=1)
@@ -157,7 +159,17 @@ def main():
         "best_cv_f1": study.best_value,
     }
 
-    with mlflow.start_run(run_name="rf-ci-best"):
+    active_run = mlflow.active_run()
+
+    if active_run is None:
+        run_context = mlflow.start_run(run_name="rf-ci-best")
+    else:
+        run_context = mlflow.start_run(
+            run_name="rf-ci-best",
+            nested=True,
+        )
+
+    with run_context:
         # Params
         for k, v in best_params.items():
             mlflow.log_param(k, v)
